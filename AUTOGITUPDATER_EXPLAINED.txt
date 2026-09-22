@@ -1,10 +1,7 @@
-# AutoGitUpdater
+AUTOGITUPDATER — PROJECT EXPLAINED
+Written for Synergicvans. Documentation updated 22 September 2026.
 
-**Three transparent automated commits daily, scheduled for 7 PM India time.**
-
-[Open the public website](https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site/) · [View workflow runs](https://github.com/Synergicvans/AutoGitUpdater/actions) · [Plain-text guide for Notepad](AUTOGITUPDATER_EXPLAINED.txt)
-
-## 1. THE ANSWER: WILL IT RUN WITH MY COMPUTER OFF?
+1. THE ANSWER: WILL IT RUN WITH MY COMPUTER OFF?
 
 Yes. Once the workflow is installed and enabled on GitHub, you can close the
 website, close your browser, disconnect your home internet, and switch off your
@@ -19,7 +16,7 @@ permission restrictions, service issues, or usage limits can interrupt runs.
 The website being closed or unavailable does not itself stop an installed
 workflow. Disabling the workflow does stop future scheduled runs.
 
-## 2. WHERE EACH PART IS DEPLOYED
+2. WHERE EACH PART IS DEPLOYED
 
 Public website:
 https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site/
@@ -46,10 +43,9 @@ Sites also has its own deployment source repository. Editing the GitHub copy
 does not automatically redeploy the website: changed website assets must be
 published through Sites. README-only changes do not require a website redeploy.
 
-## 3. HOW THE PARTS CALL EACH OTHER
+3. HOW THE PARTS CALL EACH OTHER
 
 Setup and control, while the website is open:
-```text
 Your browser -> Sites: download the webpage and JavaScript.
 Your browser -> api.github.com: authenticate and request repository actions.
 GitHub -> Your browser: return account, repository, workflow, and run details.
@@ -63,12 +59,11 @@ GitHub scheduler
   -> generates and checks example 2 -> commits and pushes it
   -> generates and checks example 3 -> commits and pushes it
   -> finishes the job and shuts down the runner.
-```
 
 The website is a control panel. It does not wake up at 7 PM or call GitHub every
 day. GitHub reads the schedule from a workflow file stored in the repository.
 
-## 4. WHAT HAPPENS AT 7 PM
+4. WHAT HAPPENS AT 7 PM
 
 The workflow file is .github/workflows/daily-update.yml, at the repository ROOT.
 GitHub does not recognize scripts/.github/workflows as a workflow directory.
@@ -92,7 +87,7 @@ The runner downloads the latest default branch using actions/checkout. It
 executes the generator tests first. Then it calls the same reusable action three
 times with slot values 1, 2, and 3.
 
-## 5. WHAT THE GENERATED CODE ACTUALLY DOES
+5. WHAT THE GENERATED CODE ACTUALLY DOES
 
 scripts/generate-update.mjs calculates today's India-calendar date and chooses
 two random whole numbers from 1 to 99. It writes a small arithmetic function.
@@ -123,7 +118,7 @@ setup commits, and documentation commits are separate. Each slot computes its
 date when it runs, so a rare run spanning India midnight can span two dates.
 Do not delete the markers to repeatedly manufacture updates.
 
-## 6. COMMIT VERSUS PUSH
+6. COMMIT VERSUS PUSH
 
 A commit records a snapshot in the runner's local Git checkout. A push uploads
 the new commit to GitHub. A local commit alone would disappear when the
@@ -141,7 +136,7 @@ Messages: chore(auto): update generated example 1/3, 2/3, and 3/3.
 Normal pushes are used, not force pushes. A conflicting remote change can fail
 the job safely. Inspect the logs and retry after resolving the conflict.
 
-## 7. TWO DIFFERENT TOKENS — DIFFERENT JOBS
+7. TWO DIFFERENT TOKENS — DIFFERENT JOBS
 
 Website personal access token:
 You enter it in the browser to let the interface call GitHub on your behalf.
@@ -169,7 +164,7 @@ denied Stop with HTTP 403. The token's effective write permissions or an account
 policy need checking. Read access alone does not prove write access. The failed
 Stop request did not disable the existing routine.
 
-## 8. WHAT EVERY WEBSITE BUTTON CALLS
+8. WHAT EVERY WEBSITE BUTTON CALLS
 
 All API paths below are relative to https://api.github.com.
 R means /repos/OWNER/REPOSITORY.
@@ -222,7 +217,7 @@ poll in the background.
 Disconnect:
 Clears the page's connection state. It does NOT call Disable workflow.
 
-## 9. THE CONTRIBUTION CHART AND THE WORKFLOW CHART
+9. THE CONTRIBUTION CHART AND THE WORKFLOW CHART
 
 GitHub's contribution chart is the calendar of green squares on your PROFILE.
 GitHub calculates it from eligible activity; this app cannot directly paint it.
@@ -245,7 +240,7 @@ a live countdown. Recent run timestamps use your browser's timezone. If you
 manually edit the workflow schedule, the website's fixed schedule text does
 not automatically detect that change.
 
-## 10. FILE AND MODULE GUIDE
+10. FILE AND MODULE GUIDE
 
 .github/workflows/daily-update.yml
   The scheduler, permissions, runner, timeout, concurrency, tests, and three calls.
@@ -316,7 +311,7 @@ website/.openai/hosting.json (local deployment checkout)
   Sites project ID and static output directory. It is in the separate Sites
   source repository, not required for GitHub Actions to run.
 
-## 11. TOOLS AND TECHNOLOGIES
+11. TOOLS AND TECHNOLOGIES
 
 Git: records commits and synchronizes repository history.
 GitHub: stores source and generated commits.
@@ -336,20 +331,18 @@ No AI model generates code during the daily job. Random numbers and a small
 fixed template produce the examples. ChatGPT/Codex helped build the project but
 does not need to remain running for its scheduled operation.
 
-## 12. WHAT YOU NEED TO INSTALL
+12. WHAT YOU NEED TO INSTALL
 
 To use the public site and cloud workflow: nothing. Use your browser and GitHub.
 To develop/test locally: install Node.js and optionally Git, then from the
 project root run:
-```sh
-node --test tests/generate-update.test.mjs tests/website.test.mjs
-node scripts/preview.mjs
-```
+  node --test tests/generate-update.test.mjs tests/website.test.mjs
+  node scripts/preview.mjs
 
 There are no npm dependencies to install for this static site and generator.
 A local preview is optional and never required for the daily cloud job.
 
-## 13. HOW TO CHECK, STOP, AND RESUME WITHOUT THE WEBSITE
+13. HOW TO CHECK, STOP, AND RESUME WITHOUT THE WEBSITE
 
 Open the repository's Actions tab, then select AutoGitUpdater.
 Use Run workflow for a manual test. Open the run and inspect the job logs.
@@ -360,7 +353,7 @@ To stop a current job: open the run -> Cancel workflow.
 To resume: Enable workflow.
 Closing the browser is not a stop command.
 
-## 14. WHAT HAS ACTUALLY BEEN VERIFIED
+14. WHAT HAS ACTUALLY BEEN VERIFIED
 
 The first manual cloud run succeeded and created three separate commits
 attributed to Synergicvans. A second attempt succeeded with no additional commit:
@@ -377,7 +370,7 @@ There is no guarantee of exact execution time, an uninterrupted streak, or a
 particular contribution-chart color. Public schedules can be disabled after
 60 days without repository activity; always check actual Actions status.
 
-## 15. SOURCES AND ATTRIBUTION
+15. SOURCES AND ATTRIBUTION
 
 Scheduling:
 https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule

@@ -117,6 +117,8 @@ Exact website paths depend on the selected starter; preserve this plan when init
 
 ## Progress record
 
+2026-09-22 documentation: Added AUTOGITUPDATER_EXPLAINED.txt for Notepad and expanded README.md with deployment locations, both request flows, all project modules, token distinctions, schedule/duplicate logic, chart interpretation, controls, dependencies, and actual verification limits. Documentation-only update; website assets and workflow behavior are unchanged.
+
 2026-09-22 implementation: User authorized completing the project. Confirmed public repository Synergicvans/AutoGitUpdater and write access. Existing workflow was misplaced at scripts/.github/workflows/daily-update.yml and contained only a schedule; scripts/update.sh was empty. Repair these without losing Git history. Use Node.js (available locally and on GitHub runners) instead of Python for a dependency-free generator and tests; generate tiny valid JavaScript examples. Verified MIT license and pinned v7 revisions for checkout and git-auto-commit-action. Commit identity will use the account's public numeric-ID noreply address. Public-site authentication choice requested while personal automation proceeds.
 
 2026-09-21: Inspected the workspace and reference README. Created this plan only. Upstream source/license verification, implementation, GitHub authorization, repository publication, and website deployment remain pending.
