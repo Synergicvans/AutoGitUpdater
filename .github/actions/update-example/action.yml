@@ -1,0 +1,22 @@
+name: Generate and commit one example
+description: Generate once per India-calendar day and push only the generated folder.
+inputs:
+  slot:
+    description: Example number (1, 2 or 3)
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Generate validated example
+      shell: bash
+      env:
+        EXAMPLE_SLOT: ${{ inputs.slot }}
+      run: node scripts/generate-update.mjs "$EXAMPLE_SLOT"
+    - name: Commit and push
+      uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7
+      with:
+        commit_message: 'chore(auto): update generated example ${{ inputs.slot }}/3'
+        file_pattern: Project_github1/example-${{ inputs.slot }}.js
+        commit_user_name: Synergicvans
+        commit_user_email: 91491055+Synergicvans@users.noreply.github.com
+        commit_author: Synergicvans <91491055+Synergicvans@users.noreply.github.com>
