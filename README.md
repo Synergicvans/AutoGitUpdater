@@ -2,6 +2,10 @@
 
 Three small, clearly labeled automated commits scheduled daily at **7 PM India time**. Runs on GitHub Actions even when your laptop is off.
 
+**Public control panel:** https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site
+
+Connect using a GitHub token kept only in your browser's memory. A fine-grained token must allow **Contents, Workflows, and Actions: read and write**, restricted to the target repository. A token that can read the status may still be denied permission to Stop, Resume, or install. Daily runs use GitHub's temporary token independently of this website connection. No installation is required to use the website.
+
 ## How it works
 
 1. `.github/workflows/daily-update.yml` starts a temporary Ubuntu runner at `30 13 * * *` UTC or when you click **Run workflow**.

@@ -1,6 +1,6 @@
 # AutoGitUpdater — implementation plan
 
-Status: Implementation authorized on 2026-09-22; existing public repository Synergicvans/AutoGitUpdater inspected.
+Status: Personal automation deployed and verified. Public website deployed. The user's browser token connects and loads real status but lacks permission for Stop; full website write-flow verification is pending a suitably permissioned token.
 Prepared: 2026-09-21.
 
 ## Working agreement
@@ -55,14 +55,14 @@ The website manages setup and controls. GitHub Actions owns the daily schedule; 
 
 - Brand the website **AutoGitUpdater** and publish it at a public HTTPS address.
 - Provide GitHub connection, repository selection, schedule summary, setup/start, actual recent run status, Stop, and Resume.
-- Use a registered GitHub App limited to selected repositories. Validate the precise GitHub permissions needed for writing contents/workflows and controlling Actions before registering it; avoid blanket account access.
+- User selected browser-only token authentication on 2026-09-22, superseding the originally proposed GitHub App. The static site sends API requests directly to api.github.com, keeps tokens only in memory, and forgets them on disconnect/reload. Recommend a fine-grained token restricted to the target repository with Contents, Workflows, and Actions read/write permissions.
 - For other users, guide repository creation when necessary, then install the app on that repository. Do not assume an installation token can create a new repository for an arbitrary user.
 - Keep app private keys and any client secrets in hosted server secrets. Use secure sessions, OAuth state validation, CSRF protection, server-side authorization, and short-lived installation tokens. Never embed secrets in client JavaScript or commit them to Git.
 - Verify repository ownership/access on every management operation. Never accept a browser-supplied installation ID as proof of authorization.
 - Handle disconnected accounts, revoked access, missing repositories, permission errors, partial installation, disabled workflows, and failed runs. Refresh state from GitHub rather than displaying simulated success.
 - Stop disables future runs and attempts to cancel active/queued runs, reporting any race or failure. Resume enables future scheduled runs without backfilling missed days.
 - Use Sites for the public website unless the user selects another provider. Confirm required outbound GitHub APIs and secret storage are supported before choosing the final server implementation.
-- Register the GitHub App with the final callback URL and configure its credentials during implementation. This requires the user's GitHub account authorization; no credentials should be pasted into this Markdown file or chat.
+- No GitHub App registration, OAuth callback, hosted secret, or app database is required for the chosen token mode. The GitHub App/session requirements above describe the superseded design and are not requirements of this implementation.
 
 ## Proposed files
 
@@ -83,18 +83,19 @@ Exact website paths depend on the selected starter; preserve this plan when init
 ## Verification and release checklist
 
 - [x] Write the implementation plan without creating application code.
-- [ ] Verify reuse licensing and record the selected upstream version.
-- [ ] Confirm account, repository visibility, and author identity.
-- [ ] Implement and test valid generation, bounded changes, partial-run recovery, and daily commit limits.
-- [ ] Verify schedule conversion: 19:00 Asia/Kolkata = 13:30 UTC.
-- [ ] Push the prepared repository and enable the workflow.
-- [ ] Trigger a real manual run and inspect three separate commits on the default branch with the intended author.
-- [ ] Retry that day's run and verify it creates no duplicate automated commits.
+- [x] Verify reuse licensing and record the selected upstream version.
+- [x] Confirm account, repository visibility, and author identity.
+- [x] Implement and test valid generation, bounded changes, partial-run recovery, and daily commit limits.
+- [x] Verify schedule conversion: 19:00 Asia/Kolkata = 13:30 UTC.
+- [x] Push the prepared repository and enable the workflow.
+- [x] Trigger a real manual run and inspect three separate commits on the default branch with the intended author.
+- [x] Retry that day's run and verify it creates no duplicate automated commits.
 - [ ] Verify Stop/Resume and active-run cancellation behavior.
 - [ ] Observe a scheduled run; until then distinguish manual success from scheduled execution not yet observed.
-- [ ] Build and test the public website with actual GitHub authentication and installation.
-- [ ] Verify user isolation, secret handling, and failure states.
-- [ ] Publish the website and verify the public URL and GitHub callback flow.
+- [x] Build the public website with browser-only GitHub token connection, setup, run, stop/resume, and recent run status.
+- [ ] Verify the website's complete connection/install flow with a user-supplied token; no token was supplied to the assistant.
+- [x] Verify memory-only token request handling and failure states; no shared server accounts/database are used.
+- [x] Publish the website publicly. OAuth callback is not applicable to the chosen browser-token mode.
 - [ ] Record the repository URL, website URL, verification results, and any remaining limitations here.
 
 ## Practical limits to communicate
@@ -121,3 +122,9 @@ Exact website paths depend on the selected starter; preserve this plan when init
 2026-09-21: Inspected the workspace and reference README. Created this plan only. Upstream source/license verification, implementation, GitHub authorization, repository publication, and website deployment remain pending.
 
 2026-09-22: User requested manual, browser-based learning with assistant guidance. Read all four upstream files and checked recent runs plus the latest commit diff. Explain each step and let the user perform repository changes; do not autonomously publish or implement while following this learning request. Begin with understanding the workflow and a browser-only setup; the public website remains a later milestone. No local application files have been created.
+
+2026-09-22 verification: Cloud run https://github.com/Synergicvans/AutoGitUpdater/actions/runs/35759176731 succeeded, creating commits 015301ed195fabe879dfe8b9cc503b7c94fa7a44, 3f95750523c02596cd9ef6584fb8520801905d9b, and 83040ff073bc842860a625f891c37f9428bd9a88, all attributed to Synergicvans. Attempt 2 succeeded with HEAD unchanged, proving duplicate prevention in a real rerun. Seven local tests passed (generator, day boundary, partial recovery, existing-file protection, token request handling, stop/cancellation behavior, credential errors). Website cancellation uses mocked GitHub responses in tests; live website token management remains unverified. No scheduled run has yet been observed.
+
+2026-09-22 publication: Website source uploaded to Sites at commit 9c7a85113ef87ee06ac6e74da4fcf7d872c4f22e. Elevated local packaging was rejected by automatic approval review due to a usage limit. Used the Sites tool's documented hosted-build fallback, without retrying local execution. Saved version 1; deployment appgdep_6ab2ba7907d48191a2ac848d96a104f9 is in progress. Public access is configured. Never store credentials in this plan.
+
+2026-09-22 final deployment: Sites reports deployment succeeded. Public URL: https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site. User connected their token in the local preview; real account connection, repository load, and workflow history succeeded. GitHub denied the Stop write request; asked the user to add Actions write permission (plus Contents/Workflows write for setup) and reconnect. The workflow is still enabled. WebMCP status tool verified with valid and invalid inputs. Source, plan, status, and website will be mirrored to the user's GitHub repository.
