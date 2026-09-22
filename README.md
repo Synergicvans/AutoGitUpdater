@@ -1,394 +1,182 @@
 # AutoGitUpdater
 
-**Three transparent automated commits daily, scheduled for 7 PM India time.**
+**Make three small, clearly labeled automated GitHub commits each day, scheduled for 7 PM India time. Your laptop can be off.**
 
-[Open the public website](https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site/) · [View workflow runs](https://github.com/Synergicvans/AutoGitUpdater/actions) · [Plain-text guide for Notepad](AUTOGITUPDATER_EXPLAINED.txt)
+[Open the website](https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site/) · [See this project's runs](https://github.com/Synergicvans/AutoGitUpdater/actions) · [Publish your own website](DEPLOYMENT.md) · [Full explanation](AUTOGITUPDATER_EXPLAINED.txt)
 
-## 1. THE ANSWER: WILL IT RUN WITH MY COMPUTER OFF?
+## Start here
 
-Yes. Once the workflow is installed and enabled on GitHub, you can close the
-website, close your browser, disconnect your home internet, and switch off your
-computer for weeks. GitHub's servers keep the schedule and start a cloud runner
-for each job. Your computer does not perform those daily jobs.
+| What do you want? | Where to start |
+| --- | --- |
+| Manage Synergicvans' existing automation | Section A — it is already installed |
+| Set it up for your own GitHub account | Section B |
+| Stop or restart it | Section C |
+| Publish your own copy of the website | [Deployment guide](DEPLOYMENT.md) |
+| Understand every file and API call | [Plain-text explanation](AUTOGITUPDATER_EXPLAINED.txt) |
 
-This does not mean a program runs continuously, 24 hours a day. GitHub starts a
-temporary computer when a run is due, executes the steps, then shuts it down.
+**Nothing to install on your computer or phone.** You need a browser and a GitHub account. A “repository” is your project folder on GitHub. A “token” is a secret key that gives the website limited access to your account.
 
-The schedule is best effort. GitHub may delay or drop jobs, and disabled Actions,
-permission restrictions, service issues, or usage limits can interrupt runs.
-The website being closed or unavailable does not itself stop an installed
-workflow. Disabling the workflow does stop future scheduled runs.
+## A. Use the existing setup
 
-## 2. WHERE EACH PART IS DEPLOYED
+The automation is already installed in **Synergicvans/AutoGitUpdater**. You do not need to create another repository or press “Set up daily updates” again.
 
-Public website:
-https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site/
+1. Open the [public website](https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site/). Do not use the old `localhost:4173` preview.
+2. Paste your GitHub token and press **Connect**. If you need a token, follow step B2 below.
+3. In **Repository**, type `Synergicvans/AutoGitUpdater`.
+4. Press **Load**.
+5. Look for **Enabled** and the recent run list.
+6. Press **Run today** only if you want to test now. Press **Refresh** after a short wait to see the result.
 
-It is published through Sites, on its Cloudflare-backed hosting infrastructure.
-It serves static HTML, CSS, JavaScript, and a setup template. It is not GitHub
-Pages, and it is not hosted on your laptop.
+Only an account/token with access to this repository can manage it. Friends should set up their own repository using section B.
 
-Source code and generated files:
-https://github.com/Synergicvans/AutoGitUpdater
+**Already updated today?** A successful rerun can create zero new commits. That is expected: it avoids duplicates.
 
-Scheduled execution and logs:
-https://github.com/Synergicvans/AutoGitUpdater/actions
+## B. Set up your own account
 
-Daily jobs run on GitHub-hosted Ubuntu runners. GitHub provides that computer
-and the temporary credential for pushing to the repository.
+### B1. Create a project folder on GitHub
 
-The localhost address http://127.0.0.1:4173 was only a development preview on
-your computer. It stops working when its local server stops. Use the public
-HTTPS address above for the deployed website.
+1. Sign in to GitHub.
+2. Open [Create a new repository](https://github.com/new).
+3. Enter **AutoGitUpdater** as the repository name.
+4. Choose **Public** if you want anyone to see its code. Choose **Private** if you do not.
+5. Turn on **Add a README file**. This creates the first branch.
+6. Press **Create repository**.
 
-The website source is mirrored under website/dist in your GitHub repository.
-Sites also has its own deployment source repository. Editing the GitHub copy
-does not automatically redeploy the website: changed website assets must be
-published through Sites. README-only changes do not require a website redeploy.
+If you already have a repository with this name, inspect it first. Use another name if it contains unrelated work. Do not delete existing work.
 
-## 3. HOW THE PARTS CALL EACH OTHER
+### B2. Make a secret access key
 
-Setup and control, while the website is open:
+1. Open [GitHub's fine-grained token page](https://github.com/settings/personal-access-tokens/new).
+2. Name the token **AutoGitUpdater website**.
+3. Choose an expiration date, such as 30 days.
+4. Set **Resource owner** to your own account.
+5. Under **Repository access**, choose **Only select repositories**.
+6. Select the repository you created in B1.
+7. Under **Repository permissions**, give these permissions:
+
+| Permission | Choose | Why |
+| --- | --- | --- |
+| Contents | Read and write | Add files and commits |
+| Workflows | Read and write | Install the daily workflow |
+| Actions | Read and write | Start, stop, resume, and read runs |
+
+8. Press **Generate token** and copy it.
+
+**Keep the token secret.** Paste it only into the website's token box. Do not put it in README files, screenshots, commits, or chat messages. GitHub may ask you to confirm your identity during token creation. Organization accounts may require administrator approval.
+
+[GitHub token instructions](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)
+
+### B3. Connect and install
+
+1. Open [AutoGitUpdater](https://autogitupdater-synergicvans.avnish123pandeys.chatgpt.site/).
+2. Paste the token into **GitHub access token**.
+3. Press **Connect**. Check that it shows your username.
+4. In **Repository**, enter `YOUR-USERNAME/AutoGitUpdater`. Replace `YOUR-USERNAME` with your actual GitHub username.
+5. Press **Load**.
+6. Press **Set up daily updates** once.
+7. Wait for the setup message, then press **Refresh** if the workflow has not appeared.
+8. Look for **Enabled**.
+
+The website adds the workflow, generator, tests, installation marker, and generated-file folder. It uses your connected account's identity for future automated commits.
+
+Use a dedicated repository. Setup refuses conflicting files in an unrecognized repository. Reinstalling into an already managed repository may replace its managed scripts with the bundled version.
+
+**Skip “Create AutoGitUpdater” for this beginner route.** You already created the repository in B1. That alternative button needs extra repository-creation access that your restricted token may not have.
+
+### B4. Test that it works
+
+1. Press **Run today**.
+2. Wait a short while, then press **Refresh**.
+3. Click the run to open its GitHub logs. Check for **success**.
+4. Open your GitHub repository's **Code** tab.
+5. Open **Project_github1**. You should see `example-1.js`, `example-2.js`, and `example-3.js`.
+6. Open the commit history. On a fresh day, expect three commits labeled `chore(auto)`.
+7. You may run it again to check duplicate protection: it should skip files already updated today.
+
+A “run requested” message is not proof of success. Always inspect the finished run and its commits.
+
+## C. Stop, resume, or disconnect
+
+| Button | What happens |
+| --- | --- |
+| Run today | Requests a run now; already-updated files are skipped |
+| Stop | Disables future runs and tries to cancel pending/active runs |
+| Resume | Enables future scheduled runs; missed days are not backfilled |
+| Refresh | Fetches the latest status and five recent runs |
+| Disconnect | Forgets the website token; the daily schedule keeps running |
+
+Already-pushed commits remain after Stop. Cancellation may take time; check GitHub Actions.
+
+**You can also stop without using this website:**
+
+1. Open your repository on GitHub.
+2. Select **Actions**, then **AutoGitUpdater**.
+3. Open the workflow's **…** menu.
+4. Choose **Disable workflow**. Choose **Enable workflow** when you want it back.
+5. To stop a job that has already started, open that run and choose **Cancel workflow**.
+
+## D. Can I close the website and turn off my computer?
+
+**Yes.** GitHub stores the schedule and starts a temporary cloud computer each day. Your laptop and website are not the scheduler.
+
 ```text
-Your browser -> Sites: download the webpage and JavaScript.
-Your browser -> api.github.com: authenticate and request repository actions.
-GitHub -> Your browser: return account, repository, workflow, and run details.
-
-Daily automation, even while the website and laptop are closed:
-GitHub scheduler
-  -> starts Ubuntu runner
-  -> checks out the repository's current default branch
-  -> runs generator tests
-  -> generates and checks example 1 -> commits and pushes it
-  -> generates and checks example 2 -> commits and pushes it
-  -> generates and checks example 3 -> commits and pushes it
-  -> finishes the job and shuts down the runner.
+GitHub's daily timer
+    -> starts a cloud computer
+    -> downloads your repository
+    -> tests and generates three small examples
+    -> commits and pushes changed examples
+    -> shuts down the cloud computer
 ```
 
-The website is a control panel. It does not wake up at 7 PM or call GitHub every
-day. GitHub reads the schedule from a workflow file stored in the repository.
+The website token is kept only in page memory and forgotten on reload/disconnect. The cloud workflow uses GitHub's separate temporary `GITHUB_TOKEN`. Your website token expiring does not itself stop an installed workflow.
 
-## 4. WHAT HAPPENS AT 7 PM
+The schedule is `30 13 * * *`: **13:30 UTC = 7 PM India time**. GitHub can delay or drop scheduled jobs. Disabled workflows, permission changes, service problems, or usage limits can interrupt automation. Public schedules may be disabled after 60 days without repository activity. [Scheduling rules](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule)
 
-The workflow file is .github/workflows/daily-update.yml, at the repository ROOT.
-GitHub does not recognize scripts/.github/workflows as a workflow directory.
+## E. What happens to the green chart?
 
-Its cron expression is: 30 13 * * *
-The five fields mean: minute 30, hour 13, every day of the month, every month,
-every day of the week. This workflow uses UTC. 13:30 UTC is 19:00 in India.
+Eligible commits can count toward your GitHub contribution calendar. Three commits contribute to one day's square, not three squares. The author email, repository, and branch must meet GitHub's rules. Private contribution visibility is controlled in your profile settings.
 
-The workflow has two triggers:
-- schedule: GitHub requests the daily run.
-- workflow_dispatch: you request a manual run through GitHub or the website.
+A green Actions check means a run succeeded; it is different from the profile's green square. Neither promises meaningful human coding. These commits are explicitly automated. [Contribution rules](https://docs.github.com/en/account-and-profile/reference/profile-contributions-reference)
 
-There is no push trigger in this workflow. Updating the README or pushing the
-generated changes does not itself trigger another run.
+## F. Publish your own website
 
-The job uses ubuntu-latest and has a five-minute timeout. The concurrency group
-prevents this workflow's jobs from updating the same repository simultaneously;
-a new request does not cancel an already-running job.
+**This is optional. The website linked above already works.** Friends can use it with their own tokens and repositories.
 
-The runner downloads the latest default branch using actions/checkout. It
-executes the generator tests first. Then it calls the same reusable action three
-times with slot values 1, 2, and 3.
+For a separate website address, follow [DEPLOYMENT.md](DEPLOYMENT.md). It explains how to upload five files and turn on GitHub Pages using only your browser. This does not move or alter the existing Sites deployment.
 
-## 5. WHAT THE GENERATED CODE ACTUALLY DOES
+## G. If something goes wrong
 
-scripts/generate-update.mjs calculates today's India-calendar date and chooses
-two random whole numbers from 1 to 99. It writes a small arithmetic function.
+| What you see | What to do |
+| --- | --- |
+| Token rejected / 401 | Check expiration, copy the token carefully, and reconnect |
+| GitHub denied access / 403 | Check the three permissions in B2, the selected repository, organization restrictions, and rate limits |
+| Repository missing / 404 | Check the exact owner/name and that the token can access it |
+| Not installed / unavailable | Wait briefly and Refresh; check Actions access and the workflow's location |
+| Setup refuses existing files | Use a dedicated new repository; do not overwrite unrelated work |
+| Create repository fails | Create it on GitHub using B1, then connect |
+| Run succeeds but no new commits | Check whether today's files were already updated |
+| Run fails | Open the run, then the failed step, and read its error; resolve it before retrying |
+| Nothing at exactly 7 PM | Scheduling can be delayed; inspect Actions rather than assuming it stopped |
+| You see localhost:4173 | Open the public HTTPS website; localhost was a development preview |
 
-Illustrative example (the actual numbers vary):
-  function transform(value) {
-    return value * 7 + 12;
-  }
-  if (transform(2) !== 26) throw new Error('Example check failed');
+The workflow must be at `.github/workflows/daily-update.yml` in the repository root, not inside `scripts/.github`.
 
-The generator executes the example with a time limit before saving it. A date
-comment records when that example was generated. Three bounded files are used:
-- Project_github1/example-1.js
-- Project_github1/example-2.js
-- Project_github1/example-3.js
+**Known verification limit:** The first cloud run created three commits; a rerun made no duplicates. Seven local tests passed. A live website token connected and read history, but GitHub denied Stop for that token. Full website write/setup testing still needs a token with effective write permission. Do not treat readable status as proof that write controls are authorized.
 
-These are real file changes and real commits, clearly labeled as automated.
-They are not meaningful daily features or evidence of manual coding.
+## H. Files, development, and credits
 
-The date marker is also the progress record. If a file already has today's
-date, the generator skips it. If a run completed two files before failing, a
-retry skips those two and completes the third. Dates in the future cause an
-error rather than backdating. An unrelated file without the expected marker is
-not overwritten.
+- [Full file-by-file explanation](AUTOGITUPDATER_EXPLAINED.txt)
+- [Implementation plan](AUTOGITUPDATER_PLAN.md)
+- [Verification status](PROJECT_STATUS.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
 
-The limit applies to this routine while its markers remain intact. Human edits,
-setup commits, and documentation commits are separate. Each slot computes its
-date when it runs, so a rare run spanning India midnight can span two dates.
-Do not delete the markers to repeatedly manufacture updates.
+Developers can install Node.js and run these commands from the project root. Ordinary users do not need them:
 
-## 6. COMMIT VERSUS PUSH
-
-A commit records a snapshot in the runner's local Git checkout. A push uploads
-the new commit to GitHub. A local commit alone would disappear when the
-temporary runner is removed unless it is pushed.
-
-.github/actions/update-example/action.yml runs the generator and invokes
-stefanzweifel/git-auto-commit-action. That action stages only the corresponding
-generated example, commits it if it changed, and pushes it. This happens
-separately for each of the three slots.
-
-Author name: Synergicvans.
-Author email: the account's numeric-ID GitHub noreply address.
-Messages: chore(auto): update generated example 1/3, 2/3, and 3/3.
-
-Normal pushes are used, not force pushes. A conflicting remote change can fail
-the job safely. Inspect the logs and retry after resolving the conflict.
-
-## 7. TWO DIFFERENT TOKENS — DIFFERENT JOBS
-
-Website personal access token:
-You enter it in the browser to let the interface call GitHub on your behalf.
-It is sent directly to api.github.com in an Authorization header. The app keeps
-it only in page memory, not localStorage, cookies, the repository, or a server
-database. Disconnecting or reloading clears it from the app's memory.
-
-Workflow GITHUB_TOKEN:
-GitHub automatically creates this temporary credential for a run. The workflow
-requests contents: write so the runner can push its changes. Checkout configures
-Git authentication for the run. This credential is independent of the personal
-token you entered into the website.
-
-Therefore, closing the webpage, losing the in-memory personal token, or letting
-that personal token expire does not itself stop the existing scheduled workflow.
-
-For website setup and management, use a fine-grained token restricted to the
-chosen repository with Contents, Workflows, and Actions read/write permissions.
-Repository creation needs appropriate creation permission; creating a repository
-with a README directly on GitHub first is the simplest alternative. A classic
-repo + workflow token is broader and is described by the interface as an option.
-
-At the last live test, your token could connect and load run history, but GitHub
-denied Stop with HTTP 403. The token's effective write permissions or an account
-policy need checking. Read access alone does not prove write access. The failed
-Stop request did not disable the existing routine.
-
-## 8. WHAT EVERY WEBSITE BUTTON CALLS
-
-All API paths below are relative to https://api.github.com.
-R means /repos/OWNER/REPOSITORY.
-W means R/actions/workflows/daily-update.yml.
-
-Connect:
-GET /user validates the token and reads the GitHub account.
-
-Load:
-GET R reads repository information and checks access.
-GET W reads workflow state.
-GET W/runs?per_page=5 reads recent runs.
-
-Set up daily updates:
-Downloads template.json from the website.
-Reads the default branch reference, commit, and recursive file tree.
-Checks for conflicting files and the .autogitupdater.json installation marker.
-Customizes the commit author for the connected account.
-POST R/git/trees creates the new set of file contents.
-POST R/git/commits creates a setup commit.
-PATCH R/git/refs/heads/BRANCH moves the branch forward with force=false.
-It then refreshes the status. Registration of a new workflow may take time.
-For a repository already managed by this app, setup may replace its managed
-workflow/script files with the bundled template. Custom edits there should be
-reviewed before reinstalling.
-
-Create AutoGitUpdater:
-POST /user/repos creates a repository with a README, subject to token permission.
-The checkbox controls its visibility. This button does not install the workflow;
-use Set up daily updates afterward.
-
-Run today:
-POST W/dispatches requests a run on the default branch.
-A successful request means queued/requested, not finished.
-Date checks mean a same-day rerun can succeed with zero new commits.
-
-Stop:
-PUT W/disable disables future runs.
-The app then lists pending/active runs and requests cancellation using
-POST R/actions/runs/RUN_ID/cancel. Cancellation can race with job completion.
-Already-pushed commits remain. Check GitHub for final cancellation status.
-
-Resume:
-PUT W/enable enables future runs. Missed days are not backfilled.
-
-Refresh:
-Reloads workflow state and the latest five runs. The page does not continuously
-poll in the background.
-
-Disconnect:
-Clears the page's connection state. It does NOT call Disable workflow.
-
-## 9. THE CONTRIBUTION CHART AND THE WORKFLOW CHART
-
-GitHub's contribution chart is the calendar of green squares on your PROFILE.
-GitHub calculates it from eligible activity; this app cannot directly paint it.
-One square represents a day, not a commit. Three eligible commits contribute
-to that day's count; they do not produce three separate squares. Color intensity
-depends on GitHub's contribution scale, so no exact shade is guaranteed.
-
-Author email association, repository eligibility, and the default branch matter.
-Private contribution display is controlled by your GitHub profile settings.
-Graph updates can lag. The profile's day grouping need not match the app's
-India-time duplicate check in every timezone situation.
-
-The Actions workflow graph is different: it shows jobs and execution status.
-A green success indicator means the job succeeded, not necessarily that three
-new commits were made. Our same-day rerun proves that distinction.
-
-The website currently shows a Recent runs LIST, not a contribution heatmap or
-live profile chart. Its 19:00 panel shows the configured standard schedule, not
-a live countdown. Recent run timestamps use your browser's timezone. If you
-manually edit the workflow schedule, the website's fixed schedule text does
-not automatically detect that change.
-
-## 10. FILE AND MODULE GUIDE
-
-.github/workflows/daily-update.yml
-  The scheduler, permissions, runner, timeout, concurrency, tests, and three calls.
-
-.github/actions/update-example/action.yml
-  Reusable two-step recipe for one example: generate, then commit/push.
-
-scripts/generate-update.mjs
-  Node.js generator, date checks, random arithmetic, validation, bounded file write.
-
-scripts/update.sh
-  Optional Bash wrapper for running one generator slot. The workflow directly
-  uses the .mjs generator, so this wrapper is not its main entry point.
-
-Project_github1/example-1.js through example-3.js
-  The generated code and durable per-file date markers.
-
-website/dist/index.html
-  The webpage structure, labels, forms, controls, and content security policy.
-
-website/dist/style.css
-  Colors, typography, layout, button states, and responsive screen sizing.
-
-website/dist/app.js
-  In-memory connection state, direct GitHub API calls, setup, control actions,
-  status rendering, errors, and prevention of simultaneous UI operations.
-  Main functions: api, connect, loadRepo, install, refresh, stop, showRuns.
-  perform handles busy/error states; controls updates enabled/disabled buttons.
-
-website/dist/template.json
-  Bundled workflow, composite action, generator, wrapper, and generator tests
-  used when installing the automation into another repository. It is a snapshot:
-  changes to generator/workflow source require updating this template too.
-
-website/dist/favicon.svg
-  Browser-tab icon.
-
-.autogitupdater.json
-  Installation marker naming this application and format version. It contains
-  no credential and is not the daily progress counter.
-
-scripts/preview.mjs
-  Optional local development HTTP server on 127.0.0.1:4173. Not part of cloud runs.
-
-tests/generate-update.test.mjs
-  Tests date boundaries, same-day skipping, partial recovery, next-day updates,
-  bounded valid output, bad slots, future dates, and unrelated-file protection.
-
-tests/website.test.mjs
-  Tests API authorization handling, empty successful responses, setup conflict
-  protection, cancellation, error messages, and the read-only status tool.
-  These tests mock GitHub; they do not replace full live permission testing.
-
-README.md / AUTOGITUPDATER_EXPLAINED.txt
-  Project documentation and this Notepad-compatible explanation.
-
-AUTOGITUPDATER_PLAN.md / PROJECT_STATUS.md
-  Implementation decisions, progress, evidence, and remaining verification work.
-
-THIRD_PARTY_NOTICES.md
-  Attribution and pinned revisions for reused components.
-
-.gitignore
-  Keeps common local dependencies, secrets, temporary archives, and runtime files
-  out of normal Git staging.
-
-website/.openai/hosting.json (local deployment checkout)
-  Sites project ID and static output directory. It is in the separate Sites
-  source repository, not required for GitHub Actions to run.
-
-## 11. TOOLS AND TECHNOLOGIES
-
-Git: records commits and synchronizes repository history.
-GitHub: stores source and generated commits.
-GitHub Actions: schedules and executes jobs.
-Ubuntu runner: temporary Linux computer supplied by GitHub.
-Node.js: runs the generator and tests; it provides the used built-in libraries.
-Bash: runs short shell commands in the composite action.
-actions/checkout: downloads/configures the repository on the runner.
-git-auto-commit-action: detects changes, commits, and pushes them.
-HTML/CSS/JavaScript: builds the static browser interface.
-GitHub REST API: lets the interface read and change GitHub resources.
-Sites: publishes and serves the control-panel website.
-WebMCP: optional browser integration exposing get_automation_status. That tool
-only reports currently loaded, non-secret state; it does not start or stop jobs.
-
-No AI model generates code during the daily job. Random numbers and a small
-fixed template produce the examples. ChatGPT/Codex helped build the project but
-does not need to remain running for its scheduled operation.
-
-## 12. WHAT YOU NEED TO INSTALL
-
-To use the public site and cloud workflow: nothing. Use your browser and GitHub.
-To develop/test locally: install Node.js and optionally Git, then from the
-project root run:
 ```sh
 node --test tests/generate-update.test.mjs tests/website.test.mjs
 node scripts/preview.mjs
 ```
 
-There are no npm dependencies to install for this static site and generator.
-A local preview is optional and never required for the daily cloud job.
+No npm installation is needed. The frontend is static; browser requests go directly to GitHub. There is no separate application backend or database. The current frontend is hosted through Sites on Cloudflare-backed infrastructure, and GitHub Actions runs the jobs.
 
-## 13. HOW TO CHECK, STOP, AND RESUME WITHOUT THE WEBSITE
-
-Open the repository's Actions tab, then select AutoGitUpdater.
-Use Run workflow for a manual test. Open the run and inspect the job logs.
-Open the repository commit history to verify exactly what changed.
-
-To stop future jobs: workflow options -> Disable workflow.
-To stop a current job: open the run -> Cancel workflow.
-To resume: Enable workflow.
-Closing the browser is not a stop command.
-
-## 14. WHAT HAS ACTUALLY BEEN VERIFIED
-
-The first manual cloud run succeeded and created three separate commits
-attributed to Synergicvans. A second attempt succeeded with no additional commit:
-https://github.com/Synergicvans/AutoGitUpdater/actions/runs/35759176731
-
-Seven local tests passed. The public website was deployed and opened
-successfully. A live browser token connected and loaded actual workflow history.
-Stop was denied by GitHub for that token; full live website write/setup testing
-remains pending suitable permissions. A future scheduled run was not yet
-observed at the time these records were written.
-
-This is a low-volume automation demonstration, not proof of daily human work.
-There is no guarantee of exact execution time, an uninterrupted streak, or a
-particular contribution-chart color. Public schedules can be disabled after
-60 days without repository activity; always check actual Actions status.
-
-## 15. SOURCES AND ATTRIBUTION
-
-Scheduling:
-https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#schedule
-
-Contribution rules:
-https://docs.github.com/en/account-and-profile/reference/profile-contributions-reference
-
-Reused MIT-licensed components:
-https://github.com/actions/checkout
-https://github.com/stefanzweifel/git-auto-commit-action
-
-Inspiration:
-https://github.com/zhafranzainal/green-commit
-Its implementation was not copied because no reuse license was found.
+Inspired by [green-commit](https://github.com/zhafranzainal/green-commit), without copying its unlicensed implementation. Reuses the MIT-licensed [actions/checkout](https://github.com/actions/checkout) and [git-auto-commit-action](https://github.com/stefanzweifel/git-auto-commit-action), pinned to specific revisions.
