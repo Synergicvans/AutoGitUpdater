@@ -180,3 +180,6 @@ node scripts/preview.mjs
 No npm installation is needed. The frontend is static; browser requests go directly to GitHub. There is no separate application backend or database. The current frontend is hosted through Sites on Cloudflare-backed infrastructure, and GitHub Actions runs the jobs.
 
 Inspired by [green-commit](https://github.com/zhafranzainal/green-commit), without copying its unlicensed implementation. Reuses the MIT-licensed [actions/checkout](https://github.com/actions/checkout) and [git-auto-commit-action](https://github.com/stefanzweifel/git-auto-commit-action), pinned to specific revisions.
+## Independent cloud timer
+
+An optional Cloudflare Worker can trigger the updater when GitHub's own daily schedule is missed. See [the Cloudflare setup guide](cloudflare/README.md). This needs a separate Cloudflare deployment and a GitHub token stored as a Worker secret; entering a token into the website alone does not install it. The timer respects a disabled GitHub workflow and skips completed days.

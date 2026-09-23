@@ -1,5 +1,9 @@
 # AutoGitUpdater — status and use
 
+## Independent timer work — 2026-09-23
+
+GitHub's 19:00 scheduled trigger did not produce a run today, although the workflow is active and manual execution succeeded yesterday. A separate Cloudflare timer has been implemented with retry, completion checks, and Stop handling. All 14 local tests pass. The Worker is deployed on the user's confirmed Workers Free ($0) plan, initially in dry-run mode. GitHub secret configuration and a real timer-to-GitHub run remain pending; this is not yet a verified live fix. See cloudflare/README.md and CLOUDFLARE_PLAN.md.
+
 ## Working now
 
 - Repository: https://github.com/Synergicvans/AutoGitUpdater
