@@ -23,3 +23,5 @@ User authorized implementation, testing, Cloudflare deployment, and GitHub commi
 Cloudflare setup is per repository. This does not silently store visitors' browser tokens or enable Cloudflare for other website users. No paid service enrollment is authorized. An automatic scheduled invocation is verified only after it occurs.
 
 2026-09-23: Deployed source in dry-run mode, version 6ff16e60-b074-4f04-8640-cb5d74b186fe. All three cron entries are registered. Account dashboard confirms Workers Free ($0). User is entering GITHUB_TOKEN directly into a Cloudflare Secret field. Runtime verification is still pending.
+
+2026-09-24: Token exists as an encrypted secret. Fixed unsupported Workers redirect mode; deployed version bcb11f1b-078d-4a47-85c5-b439994608be. Fifteen tests pass. Cloudflare remote read-only test succeeded, detecting today's completed files. One-off dispatch test returned 403. User asked to correct token Actions write permission. GitHub itself ran today's schedule late at 17:53 UTC. Independent dispatch remains unverified until the permission issue is resolved.

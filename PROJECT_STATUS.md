@@ -2,6 +2,10 @@
 
 ## Independent timer work — 2026-09-23
 
+2026-09-24 repair: Cloudflare was invoking the timer, but its fetch call used unsupported `redirect: 'error'`. Replaced it with `manual`, retaining rejection of redirects without forwarding credentials. All 15 tests pass. Deployed version bcb11f1b-078d-4a47-85c5-b439994608be runs in live mode on Workers Free. A real Cloudflare dry-run now returns `complete` for all three September 24 files. Separate Cloudflare dispatch verification returned 403; the saved personal token's Actions write access must be corrected before the independent timer can start runs. Do not call the integration fully verified yet.
+
+GitHub's original schedule did run late on September 23 and September 24, at approximately 23:24 IST. Today's successful run: https://github.com/Synergicvans/AutoGitUpdater/actions/runs/36037465920. It created commits 584fae82817268041976a2ac9373c38ed664713f, f4296a528b4a10206248a07d3ddee21a902d5dbb, and 90f44b9042a5308d279c7b778fdcf99fc81338a4. These were produced by GitHub's schedule, not by Cloudflare.
+
 GitHub's 19:00 scheduled trigger did not produce a run today, although the workflow is active and manual execution succeeded yesterday. A separate Cloudflare timer has been implemented with retry, completion checks, and Stop handling. All 14 local tests pass. The Worker is deployed on the user's confirmed Workers Free ($0) plan, initially in dry-run mode. GitHub secret configuration and a real timer-to-GitHub run remain pending; this is not yet a verified live fix. See cloudflare/README.md and CLOUDFLARE_PLAN.md.
 
 ## Working now

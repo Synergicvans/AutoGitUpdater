@@ -75,3 +75,13 @@ test('Dispatch rejection fails rather than claiming success; 200 and 204 accepte
 test('No public HTTP endpoint can trigger a run', async () => {
   assert.equal((await worker.fetch(new Request('https://example.com/run', { method: 'POST' }))).status, 404);
 });
+
+test('Workers-compatible redirect handling rejects redirects without following them', async () => {
+  let calls = 0;
+  await assert.rejects(tick(env, now, async (_url, options) => {
+    calls++;
+    assert.equal(options.redirect, 'manual');
+    return new Response(null, { status: 302, headers: { Location: 'https://example.com' } });
+  }), /302/);
+  assert.equal(calls, 1);
+});

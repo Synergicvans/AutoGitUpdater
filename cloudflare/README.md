@@ -16,14 +16,14 @@ No computer or browser needs to stay open. Cloudflare and GitHub must both remai
 
 1. Sign into your own Cloudflare account. Use Workers Free unless you intentionally choose a paid plan.
 2. Create a fine-grained GitHub token restricted to the automation repository, with **Contents: read** and **Actions: read and write**. An existing website token with these permissions can also work. Never paste it into source code, GitHub, or chat.
-3. From this directory, run `npx wrangler@4 login`, then `npx wrangler@4 deploy`. Review Cloudflare's authorization request. The configuration starts in **DRY_RUN=true**; no dispatch is made yet.
+3. Before your first deployment, set `DRY_RUN` to `"true"` in `wrangler.jsonc` for a read-only check. From this directory, run `npx wrangler@4 login`, then `npx wrangler@4 deploy`. Review Cloudflare's authorization request. The owner's deployed configuration uses **DRY_RUN=false** for live operation.
 4. In Cloudflare, open **Workers & Pages → autogitupdater-timer → Settings → Variables and Secrets**. Add **GITHUB_TOKEN** with type **Secret**. Paste the token directly into that field and save/deploy.
 5. Check configuration: `GITHUB_REPOSITORY=Synergicvans/AutoGitUpdater`, `ENABLED=true`, `DRY_RUN=true`. Change the repository if deploying your own copy.
 6. Look under **Settings → Trigger Events** for the three UTC cron entries in `wrangler.jsonc`. Together they cover 19:00–23:50 Asia/Kolkata. New triggers may take up to 15 minutes to propagate.
 7. In **Observability**, a timer invocation should log `would-dispatch`, `complete`, or `run-pending`. Read access alone cannot prove dispatch permission.
 8. Set **DRY_RUN=false** and deploy the setting. At the next tick, verify a `dispatched` log, then a successful run in GitHub **Actions**, then `complete` on a later tick. A GitHub API 403 requires checking the token's repository selection and Actions write permission.
 
-For CLI secret entry, `npx wrangler@4 secret put GITHUB_TOKEN` prompts securely. Never put the token in a command argument or config file. Before later CLI deployments, update the checked-in DRY_RUN value to match your intended mode: deploying the initial config again intentionally restores dry-run mode.
+For CLI secret entry, `npx wrangler@4 secret put GITHUB_TOKEN` prompts securely. Never put the token in a command argument or config file. Before later CLI deployments, update the checked-in DRY_RUN value to match your intended mode. Dashboard settings can be overwritten by a later CLI deployment.
 
 ## Stop, resume, and maintenance
 
@@ -37,5 +37,9 @@ For CLI secret entry, `npx wrangler@4 secret put GITHUB_TOKEN` prompts securely.
 ## Local verification
 
 From the repository root: `node --test tests/cloudflare-timer.test.mjs tests/generate-update.test.mjs`.
+
+For an explicitly authorized real dispatch test, run `npx wrangler@4 dev verify-dispatch.mjs --remote --test-scheduled --ip 127.0.0.1 --port 8788` from this directory, then request `http://127.0.0.1:8788/__scheduled`. This uses the deployed Worker's secret and starts one actual GitHub workflow; it is not a dry run. Check Actions for success, then stop the local server. Never deploy verify-dispatch.mjs as the production entry point. Duplicate day markers prevent repeated daily file updates.
+
+Workers fetch must use `redirect: 'manual'`; `redirect: 'error'` is unsupported at the edge. Non-success responses are rejected and credentials are never forwarded to redirect destinations.
 
 Sources: [Cloudflare cron](https://developers.cloudflare.com/workers/configuration/cron-triggers/), [Worker secrets](https://developers.cloudflare.com/workers/configuration/secrets/), [GitHub dispatch API](https://docs.github.com/en/rest/actions/workflows#create-a-workflow-dispatch-event).

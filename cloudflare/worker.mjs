@@ -27,10 +27,15 @@ export async function tick(env, time = Date.now(), request = fetch) {
       },
       ...(body ? { body: JSON.stringify(body) } : {}),
       signal: AbortSignal.timeout(20_000),
-      redirect: 'error',
+      // Workers supports manual/follow only. Reject 3xx below without forwarding credentials.
+      redirect: 'manual',
     });
     if (allow404 && response.status === 404) return null;
-    if (!response.ok) throw new Error(`GitHub ${method} failed (${response.status})`);
+    if (!response.ok) {
+      const error = new Error(`GitHub ${method} failed (${response.status})`);
+      error.diagnostic = { stage: path.split('?')[0] || '/repository', method, status: response.status };
+      throw error;
+    }
     if (response.status === 204) return null;
     return response.json();
   }
@@ -71,7 +76,9 @@ export default {
       return result;
     } catch (error) {
       // Never log request headers, secret values, or GitHub response bodies.
-      console.error('AutoGitUpdater timer failed; inspect permissions and retry on the next tick.');
+      const detail = String(error.message).split(env.GITHUB_TOKEN || '\0').join('[redacted]')
+        .replace(/(?:github_pat_|gh[pousr]_)[A-Za-z0-9_]+/g, '[redacted]').slice(0, 240);
+      console.error(JSON.stringify(error.diagnostic || { stage: 'runtime', type: error.name, detail }));
       throw new Error('AutoGitUpdater timer failed');
     }
   },
