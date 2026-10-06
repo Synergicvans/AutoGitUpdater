@@ -1,6 +1,6 @@
-// AutoGitUpdater day: 2026-10-06
+// AutoGitUpdater day: 2026-10-07
 // Generated arithmetic example 1/3; this is an automated change.
 function transform(value) {
-  return value * 40 + 28;
+  return value * 16 + 33;
 }
-if (transform(2) !== 108) throw new Error('Example check failed');
+if (transform(2) !== 65) throw new Error('Example check failed');
